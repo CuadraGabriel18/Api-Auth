@@ -36,5 +36,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-    console.log('✅ Auth API corriendo en http://localhost:' + PORT);
+    console.log('✅ Auth API corriendo en el puerto' + PORT);
 });
