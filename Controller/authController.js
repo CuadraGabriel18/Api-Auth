@@ -52,6 +52,7 @@ const googleCallbackController = (req, res) => {
   const token = generateToken(req.user);
   const username = req.user.username;
   const email = req.user.email;
+  const role = req.user.role;
 
   // Redirigir al frontend con los datos
   res.redirect(`http://127.0.0.1:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`);
