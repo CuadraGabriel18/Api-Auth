@@ -1,12 +1,12 @@
 const { registerUser, validateUser, getUserProfile } = require('../Service/authService');
 const { generateToken } = require('../Utils/jwt');
 
+// 🔹 Registro Local
 const registerController = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
 
     const user = await registerUser({ username, email, password, role });
-
     const token = generateToken(user);
 
     res.status(201).json({
@@ -24,12 +24,12 @@ const registerController = async (req, res) => {
   }
 };
 
+// 🔹 Login Local
 const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const user = await validateUser(email, password);
-
     const token = generateToken(user);
 
     res.status(200).json({
@@ -47,27 +47,27 @@ const loginController = async (req, res) => {
   }
 };
 
-// 🟢 Login con Google (usuarios EXISTENTES)
+// 🔹 Login con Google (usuarios EXISTENTES)
 const googleCallbackController = (req, res) => {
   const token = generateToken(req.user);
-  const username = req.user.username;
-  const email = req.user.email;
-  const role = req.user.role;
+  const { username, email, role } = req.user;
 
-  // Redirigir al frontend con los datos
-  res.redirect(`http://127.0.0.1:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`);
+  res.redirect(
+    `http://127.0.0.1:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`
+  );
 };
 
-// 🟢 Registro con Google (usuarios NUEVOS)
+// 🔹 Registro con Google (usuarios NUEVOS)
 const googleRegisterCallbackController = (req, res) => {
   const token = generateToken(req.user);
-  const username = req.user.username;
-  const email = req.user.email;
+  const { username, email, role } = req.user;
 
-  // Redirigir al frontend con los datos
-  res.redirect(`http://127.0.0.1:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`);
+  res.redirect(
+    `http://127.0.0.1:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`
+  );
 };
 
+// 🔹 Perfil autenticado
 const profileController = async (req, res) => {
   try {
     const user = await getUserProfile(req.user.id);
