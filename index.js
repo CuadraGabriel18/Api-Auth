@@ -35,6 +35,6 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Error interno del servidor' });
 });
 
-app.listen(PORT, () => {
-    console.log('✅ Auth API corriendo en el puerto' + PORT);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log('✅ Auth API corriendo en el puerto y en 0.0.0.0 ' + PORT);
 });
