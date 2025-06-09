@@ -57,9 +57,25 @@ async function getUserProfile(userId) {
     return user;
 }
 
+// ✅ Obtener todos los usuarios (sin contraseñas)
+async function getAllUsers() {
+    return await User.find().select('-passwordHash');
+}
+
+// ✅ Eliminar usuario por ID (local o Google)
+async function deleteUserById(userId) {
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+        throw new Error('User not found or already deleted');
+    }
+    return user;
+}
+
 module.exports = {
     registerUser,
     validateUser,
     findOrCreateGoogleUser,
-    getUserProfile
+    getUserProfile,
+    getAllUsers,
+    deleteUserById
 };

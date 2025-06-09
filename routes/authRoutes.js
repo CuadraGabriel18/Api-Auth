@@ -6,7 +6,9 @@ const {
   loginController,
   registerController,
   googleCallbackController,
-  profileController
+  profileController,
+  getAllUsersController,
+  deleteUserController
 } = require('../Controller/authController');
 const { generateToken } = require('../Utils/jwt');
 
@@ -78,5 +80,9 @@ router.get('/google/register/callback', (req, res, next) => {
     res.redirect(`http://127.0.0.1:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(user.role)}`);
   })(req, res, next);
 });
+
+// 🆕 Rutas ADMIN: listar y eliminar usuarios
+router.get('/users', authenticateJWT, authorizeRoles('admin'), getAllUsersController);
+router.delete('/users/:id', authenticateJWT, authorizeRoles('admin'), deleteUserController);
 
 module.exports = router;
