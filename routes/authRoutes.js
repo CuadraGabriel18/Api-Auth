@@ -48,22 +48,34 @@ router.get('/google/callback',
   }
 );
 
-// 🌐 Registro con Google OAuth (usuarios nuevos)
-router.get('/google/register', passport.authenticate('google-register', {
-  scope: ['profile', 'email'],
-  prompt: 'select_account'
-}));
+// 🌐 Registro con Google OAuth (usuarios nuevos) — con rol dinámico
+router.get('/google/register', (req, res, next) => {
+  const role = req.query.role;
+  passport.authenticate('google-register', {
+    scope: ['profile', 'email'],
+    prompt: 'select_account',
+    state: role // usamos "state" para pasar el rol
+  })(req, res, next);
+});
 
-// 🔁 Callback de Google OAuth (Registro) con manejo de errores
+// 🔁 Callback de Google OAuth (Registro) con manejo de errores y rol
 router.get('/google/register/callback', (req, res, next) => {
-  passport.authenticate('google-register', { session: false }, (err, user, info) => {
+  const role = req.query.state; // recuperamos el rol desde state
+
+  passport.authenticate('google-register', { session: false }, async (err, user, info) => {
     if (err || !user) {
       return res.redirect('http://127.0.0.1:5500/login.html?error=Cuenta%20ya%20registrada');
     }
 
+    // 🔐 Asignar rol si viene en query
+    if (role && (role === 'teacher' || role === 'student')) {
+      user.role = role;
+      await user.save();
+    }
+
     const token = generateToken(user);
-    const { username, email, role } = user;
-    res.redirect(`http://127.0.0.1:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`);
+    const { username, email } = user;
+    res.redirect(`http://127.0.0.1:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(user.role)}`);
   })(req, res, next);
 });
 
