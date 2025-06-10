@@ -48,7 +48,7 @@ router.get('/google/callback',
   (req, res) => {
     const token = generateToken(req.user);
     const { username, email, role } = req.user;
-    res.redirect(`http://127.0.0.1:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`);
+    res.redirect(`http://192.168.119.142:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`);
   }
 );
 
