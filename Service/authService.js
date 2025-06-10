@@ -71,11 +71,20 @@ async function deleteUserById(userId) {
     return user;
 }
 
+async function getUserById(userId) {
+    const user = await User.findById(userId).select('-passwordHash');
+    if (!user) {
+        throw new Error('Usuario no encontrado');
+    }
+    return user;
+}
+
 module.exports = {
     registerUser,
     validateUser,
     findOrCreateGoogleUser,
     getUserProfile,
     getAllUsers,
-    deleteUserById
+    deleteUserById,
+    getUserById
 };

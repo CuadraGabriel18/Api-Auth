@@ -6,9 +6,11 @@ const {
   loginController,
   registerController,
   googleCallbackController,
+  googleRegisterCallbackController,
   profileController,
   getAllUsersController,
-  deleteUserController
+  deleteUserController,
+  getUserByIdController // 👈 nueva función
 } = require('../Controller/authController');
 const { generateToken } = require('../Utils/jwt');
 
@@ -19,7 +21,7 @@ router.post('/register', registerController);
 // 🔒 Perfil del usuario autenticado (protegido con JWT)
 router.get('/profile', authenticateJWT, profileController);
 
-// 🔒 RUTAS PROTEGIDAS POR ROLES INDIVIDUALES
+// 🔒 Dashboards protegidos por roles
 router.get('/admin/dashboard', authenticateJWT, authorizeRoles('admin'), (req, res) => {
   res.status(200).json({ message: 'Bienvenido al dashboard de Administradores' });
 });
@@ -62,14 +64,13 @@ router.get('/google/register', (req, res, next) => {
 
 // 🔁 Callback de Google OAuth (Registro) con manejo de errores y rol
 router.get('/google/register/callback', (req, res, next) => {
-  const role = req.query.state; // recuperamos el rol desde state
+  const role = req.query.state;
 
   passport.authenticate('google-register', { session: false }, async (err, user, info) => {
     if (err || !user) {
       return res.redirect('http://127.0.0.1:5500/login.html?error=Cuenta%20ya%20registrada');
     }
 
-    // 🔐 Asignar rol si viene en query
     if (role && (role === 'teacher' || role === 'student')) {
       user.role = role;
       await user.save();
@@ -84,5 +85,8 @@ router.get('/google/register/callback', (req, res, next) => {
 // 🆕 Rutas ADMIN: listar y eliminar usuarios
 router.get('/users', authenticateJWT, authorizeRoles('admin'), getAllUsersController);
 router.delete('/users/:id', authenticateJWT, authorizeRoles('admin'), deleteUserController);
+
+// 🆕 Obtener usuario por ID (para uso de API académica)
+router.get('/users/:id', authenticateJWT, getUserByIdController);
 
 module.exports = router;

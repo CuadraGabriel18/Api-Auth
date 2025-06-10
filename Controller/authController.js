@@ -1,4 +1,4 @@
-const { registerUser, validateUser, getUserProfile, getAllUsers, deleteUserById } = require('../Service/authService');
+const { registerUser, validateUser, getUserProfile, getAllUsers, deleteUserById, getUserById } = require('../Service/authService');
 const { generateToken } = require('../Utils/jwt');
 
 // 🔹 Registro Local
@@ -104,6 +104,16 @@ const deleteUserController = async (req, res) => {
   }
 };
 
+const getUserByIdController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await getUserById(id);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+};
+
 module.exports = {
   registerController,
   loginController,
@@ -111,5 +121,6 @@ module.exports = {
   googleCallbackController,
   googleRegisterCallbackController,
   getAllUsersController,
-  deleteUserController
+  deleteUserController,
+  getUserByIdController
 };
