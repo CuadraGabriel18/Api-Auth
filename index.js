@@ -19,35 +19,22 @@ if (!JWT_SECRET || !MONGO_URI) {
 
 const app = express();
 
-// ✅ CORS para permitir cualquier IP local tipo http://192.168.x.x
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || origin.startsWith('http://192.168.42.142')) {
-      callback(null, true); // permitir
-    } else {
-      callback(new Error('No permitido por CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: false
-}));
-
+app.use(cors());
 app.use(express.json());
 app.use(passport.initialize());
 
 // Conectar a la base de datos
 connectDB();
 
-// Prefijo para todas las rutas de autenticación
+// Prefijo para todas las rutas de auth
 app.use('/auth', authRouter);
 
-// Middleware global de manejo de errores
+// Middleware de error global (opcional pero recomendado)
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ message: 'Error interno del servidor' });
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log('✅ Auth API corriendo en 0.0.0.0:' + PORT);
+    console.log('✅ Auth API corriendo en el puerto y en 0.0.0.0 ' + PORT);
 });
