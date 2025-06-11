@@ -3,7 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const passport = require('passport');
 const { connectDB } = require('./data/config');
-require('./data/passport');
+require('./data/passport'); 
 const authRouter = require('./routes/authRoutes');
 
 const PORT = process.env.PORT || 3001;
@@ -19,29 +19,22 @@ if (!JWT_SECRET || !MONGO_URI) {
 
 const app = express();
 
-// ✅ CORS avanzado para frontend
-app.use(cors({
-  origin: ['http://localhost:5500', 'http://192.168.42.142:5500'], // Reemplaza con tu IP o dominio real si cambia
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
-
+app.use(cors());
 app.use(express.json());
 app.use(passport.initialize());
 
+// Conectar a la base de datos
 connectDB();
 
-// Rutas
+// Prefijo para todas las rutas de auth
 app.use('/auth', authRouter);
 
-// Error global
+// Middleware de error global (opcional pero recomendado)
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ message: 'Error interno del servidor' });
 });
 
-// Inicia servidor
 app.listen(PORT, '0.0.0.0', () => {
     console.log('✅ Auth API corriendo en el puerto y en 0.0.0.0 ' + PORT);
 });
