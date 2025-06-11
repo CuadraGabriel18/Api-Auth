@@ -53,7 +53,7 @@ const googleCallbackController = (req, res) => {
   const { username, email, role } = req.user;
 
   res.redirect(
-    `http://192.168.195.142:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`
+    `http://192.168.42.142:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`
   );
 };
 
@@ -63,7 +63,7 @@ const googleRegisterCallbackController = (req, res) => {
   const { username, email, role } = req.user;
 
   res.redirect(
-    `http://192.168.195.142:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`
+    `http://192.168.42.142:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`
   );
 };
 
