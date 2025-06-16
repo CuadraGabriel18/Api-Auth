@@ -48,7 +48,7 @@ router.get('/google/callback',
   (req, res) => {
     const token = generateToken(req.user);
     const { username, email, role } = req.user;
-    res.redirect(`http://192.168.42.142:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`);
+    res.redirect(`http://192.168.42.142/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`);
   }
 );
 
@@ -68,7 +68,7 @@ router.get('/google/register/callback', (req, res, next) => {
 
   passport.authenticate('google-register', { session: false }, async (err, user, info) => {
     if (err || !user) {
-      return res.redirect('http://192.168.42.142:5500/login.html?error=Cuenta%20ya%20registrada');
+      return res.redirect('http://192.168.42.142/login.html?error=Cuenta%20ya%20registrada');
     }
 
     if (role && (role === 'teacher' || role === 'student')) {
@@ -78,7 +78,7 @@ router.get('/google/register/callback', (req, res, next) => {
 
     const token = generateToken(user);
     const { username, email } = user;
-    res.redirect(`http://192.168.42.142:5500/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(user.role)}`);
+    res.redirect(`http://192.168.42.142/login.html?token=${token}&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&role=${encodeURIComponent(user.role)}`);
   })(req, res, next);
 });
 
